@@ -189,3 +189,7 @@ def test_top_k_labels_coverage_ON_discrim_OFF():
                           ['machine learning',  # because discri OFF
                            'topic modeling',
                            'business management']])
+
+
+# NOTE:
+# Actually, the power of `intra-coverage` is not demonstrated in this testcase
