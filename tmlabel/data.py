@@ -6,7 +6,7 @@ import codecs
 CURDIR = os.path.dirname(os.path.realpath(__file__))
 
 
-def load_nips(years=None):
+def load_nips(years=None, raw=False):
     # load data
     if not years:
         years = xrange(2008, 2015)
@@ -17,7 +17,12 @@ def load_nips(years=None):
     for f in files:
         with codecs.open('{}/datasets/{}'.format(CURDIR, f), 'r', 'utf8') as f:
             for l in f:
-                sents = nltk.sent_tokenize(l.strip().lower())
-                docs.append(list(itertools.chain(*map(
-                    nltk.word_tokenize, sents))))
+                if raw:
+                    docs.append(l.strip())
+                else:
+                    sents = nltk.sent_tokenize(l.strip().lower())
+                    docs.append(list(itertools.chain(*map(
+                        nltk.word_tokenize, sents))))
     return docs
+
+
