@@ -2,7 +2,7 @@ import numpy as np
 from scipy.sparse import csr_matrix
 from nose.tools import assert_equal
 from numpy.testing import assert_array_almost_equal
-from pmi import PMICalculator
+from tmlabel.pmi import PMICalculator
 
 # 4 words
 # 3 documents
@@ -36,7 +36,7 @@ def test_from_matrices():
 
 from test_text import (docs, labels)
 from sklearn.feature_extraction.text import CountVectorizer
-from text import LabelCountVectorizer
+from tmlabel.text import LabelCountVectorizer
 
 
 def test_from_texts():

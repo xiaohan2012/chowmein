@@ -3,7 +3,7 @@ from nose.tools import assert_equal
 from numpy.testing import (assert_array_almost_equal,
                            assert_array_equal,
                            assert_almost_equal)
-from label_ranker import LabelRanker
+from tmlabel.label_ranker import LabelRanker
 
 
 ranker = LabelRanker()
@@ -75,7 +75,7 @@ def test_mmr_scores_max_part():
                               np.asarray(
                                   [alpha*0.06 - (1-alpha)*0.223143551]
                               ))
-    
+
 
 def test_discriminative_scores():
     label_discriminative_score = ranker.label_discriminative_score(
@@ -86,7 +86,7 @@ def test_discriminative_scores():
                               np.asarray([[0.085, 0.3875, 0.0375],
                                           [0.47, 0.27, 0.04],
                                           [0.395, 0.4775, 0.0575]]))
-    
+
 
 def test_combined_label_score():
     label_score = ranker.combined_label_score(topic_models,
