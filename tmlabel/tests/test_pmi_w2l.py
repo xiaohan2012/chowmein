@@ -22,17 +22,29 @@ d2l_sparse = csr_matrix(d2l)
 cal = PMICalculator()
 
 
-def test_from_matrices():
+def test_from_matrices_no_smoothing():
     expected = np.log(3 * np.asarray([[0.25, 0.],
                                       [0.16666667, 0.11111111],
                                       [0., 0.33333333],
                                       [0.16666667, 0.11111111]]))
+
     # dense input
-    assert_array_almost_equal(cal.from_matrices(d2w, d2l), expected)
+    assert_array_almost_equal(cal.from_matrices(d2w, d2l, pseudo_count=0),
+                              expected)
     # sparse input
-    assert_array_almost_equal(cal.from_matrices(d2w_sparse, d2l_sparse),
+    assert_array_almost_equal(cal.from_matrices(d2w_sparse, d2l_sparse,
+                                                pseudo_count=0),
                               expected)
 
+
+def test_from_matrices_with_smoothing():
+    expected = np.asarray([[-2.877121e-01, -6.931722e-01],
+                           [-6.931722e-01, -1.098632e+00],
+                           [4.054201e-01, -3.999950e-05],
+                           [-6.931722e-01, -1.098632e+00]])
+
+    assert_array_almost_equal(cal.from_matrices(d2w, d2l, pseudo_count=1e-5),
+                              expected)
 
 from test_text import (docs, labels)
 from sklearn.feature_extraction.text import CountVectorizer

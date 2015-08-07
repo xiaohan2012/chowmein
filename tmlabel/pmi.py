@@ -17,7 +17,7 @@ class PMICalculator(object):
         self.index2word_ = None
         self.index2label_ = None
         
-    def from_matrices(self, d2w, d2l):
+    def from_matrices(self, d2w, d2l, pseudo_count=1e-10):
         """
         Parameter:
         ------------
@@ -28,11 +28,18 @@ class PMICalculator(object):
             document-label frequency matrix
             type should be the same with `d2w`
 
+        pseudo_count: float
+            smooth parameter to avoid division by zero
+
         Return:
         ------------
         numpy.ndarray: #word x #label
             the pmi matrix
         """
+        # smoothing
+        d2w = (d2w + pseudo_count)
+        d2l = (d2l + pseudo_count)
+        
         denom1 = d2w.T.sum(axis=1)
         denom2 = d2l.sum(axis=0)
 
