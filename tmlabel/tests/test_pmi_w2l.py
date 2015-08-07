@@ -45,3 +45,17 @@ def test_from_texts():
     actual = cal.from_texts(docs, labels)
     assert_equal(actual.shape[1], 4)
     assert_equal(actual.shape[0], 10)
+    assert_equal(cal.index2word_, {0: u'information',
+                                   1: u'language',
+                                   2: u'learning',
+                                   3: u'learningmachine',
+                                   4: u'machine',
+                                   5: u'mining',
+                                   6: u'natural',
+                                   7: u'processing',
+                                   8: u'retrieval',
+                                   9: u'text'})
+    assert_equal(cal.index2label_, {0: 'information retrieval',
+                                    1: 'machine learning',
+                                    2: 'natural language processing',
+                                    3: 'text mining'})

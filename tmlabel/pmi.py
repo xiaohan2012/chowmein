@@ -74,5 +74,5 @@ class PMICalculator(object):
         d2l = self._d2l_vect.transform(raw_docs, labels)
         self.index2label_ = self._d2l_vect.index2label_
         self.index2word_ = {i: w
-                            for i, w in self._d2w_vect.vocabulary_.items()}
+                            for w, i in self._d2w_vect.vocabulary_.items()}
         return self.from_matrices(d2w, d2l)
