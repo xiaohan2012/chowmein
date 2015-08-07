@@ -17,7 +17,7 @@ class PMICalculator(object):
         self.index2word_ = None
         self.index2label_ = None
         
-    def from_matrices(self, d2w, d2l, pseudo_count=1e-10):
+    def from_matrices(self, d2w, d2l, pseudo_count=1e-5):
         """
         Parameter:
         ------------
@@ -29,7 +29,7 @@ class PMICalculator(object):
             type should be the same with `d2w`
 
         pseudo_count: float
-            smooth parameter to avoid division by zero
+            smoothing parameter to avoid division by zero
 
         Return:
         ------------
@@ -37,12 +37,12 @@ class PMICalculator(object):
             the pmi matrix
         """
         # smoothing
-        d2w = (d2w + pseudo_count)
-        d2l = (d2l + pseudo_count)
+        # d2w += pseudo_count
+        # d2l += pseudo_count
         
         denom1 = d2w.T.sum(axis=1)
         denom2 = d2l.sum(axis=0)
-
+        
         # both are dense
         if (not issparse(d2w)) and (not issparse(d2l)):
             numer = np.matrix(d2w.T > 0) * np.matrix(d2l > 0)
@@ -56,30 +56,35 @@ class PMICalculator(object):
                             'They should be the same.'.format(
                                 type(d2w), type(d2l)))
 
-        numer = np.asarray(numer, dtype=np.float)
-        denom1 = denom1.repeat(
-            repeats=d2l.shape[1], axis=1)
-        denom2 = denom2.repeat(
-            repeats=d2w.shape[1], axis=0)
+        # dtype conversion
+        numer = np.asarray(numer, dtype=np.float64)
+        denom1 = denom1.repeat(repeats=d2l.shape[1], axis=1)
+        denom2 = denom2.repeat(repeats=d2w.shape[1], axis=0)
+
+        # smoothing
+        numer += pseudo_count
+
         return np.log(d2w.shape[0] * numer / denom1 / denom2)
 
-    def from_texts(self, raw_docs, labels):
+    def from_texts(self, docs, labels):
         """
         Parameter:
         -----------
-        raw_docs: list of string
-            the document's raw string
+        docs: list of list of string
+            the tokenized documents
 
-        labels: list of string
+        labels: list of list of string
         
         Return:
         -----------
         numpy.ndarray: #word x #label
             the pmi matrix
         """
-        d2w = self._d2w_vect.fit_transform(raw_docs)
-        d2l = self._d2l_vect.transform(raw_docs, labels)
+        d2w = self._d2w_vect.fit_transform(map(lambda sent: ' '.join(sent),
+                                               docs))
+        d2l = self._d2l_vect.transform(docs, labels)
         self.index2label_ = self._d2l_vect.index2label_
+        print 'label of index 0', self.index2label_[0]
         self.index2word_ = {i: w
                             for w, i in self._d2w_vect.vocabulary_.items()}
         return self.from_matrices(d2w, d2l)
