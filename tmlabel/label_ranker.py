@@ -62,7 +62,7 @@ class LabelRanker(object):
         """
         assert topic_models.shape[1] == pmi_w2l.shape[0]
         k = topic_models.shape[0]
-        return (relevance_score.sum(axis=0)[None, :].repeat(repeats=3, axis=0)
+        return (relevance_score.sum(axis=0)[None, :].repeat(repeats=k, axis=0)
                 - relevance_score) / (k-1)
         
     def label_mmr_score(self,
@@ -138,6 +138,10 @@ class LabelRanker(object):
         numpy.ndarray, shape (#topics, #labels)
             score for each topic and label pair
         """
+        print "pmi_w2l:"
+        print "-" * 20
+        print pmi_w2l
+
         rel_scores = self.label_relevance_score(topic_models, pmi_w2l)
         
         if use_discrimination:
@@ -212,8 +216,11 @@ class LabelRanker(object):
                                                            label_models)
         else:
             chosen_labels = np.argsort(label_scores, axis=1)[:, :-k-1:-1]
-
-        return [[index2label[j] for j in topic_i_labels]
+        print "label_scores:"
+        print "-" * 20
+        print label_scores
+        return [[index2label[j]
+                 for j in topic_i_labels]
                 for topic_i_labels in chosen_labels]
             
 

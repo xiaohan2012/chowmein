@@ -21,10 +21,10 @@ class PMICalculator(object):
         """
         Parameter:
         ------------
-        d2w: numpy.ndarray or scipy.sparse.csr_matrix 
+        d2w: numpy.ndarray or scipy.sparse.csr_matrix
             document-word frequency matrix
         
-        d2l: numpy.ndarray or scipy.sparse.csr_matrix 
+        d2l: numpy.ndarray or scipy.sparse.csr_matrix
             document-label frequency matrix
             type should be the same with `d2w`
 
@@ -42,7 +42,10 @@ class PMICalculator(object):
         
         denom1 = d2w.T.sum(axis=1)
         denom2 = d2l.sum(axis=0)
-        
+
+        print denom1
+        print denom2
+
         # both are dense
         if (not issparse(d2w)) and (not issparse(d2l)):
             numer = np.matrix(d2w.T > 0) * np.matrix(d2l > 0)
@@ -82,6 +85,10 @@ class PMICalculator(object):
         """
         d2w = self._d2w_vect.fit_transform(map(lambda sent: ' '.join(sent),
                                                docs))
+
+        # save it to avoid re-computation
+        self.d2w_ = d2w
+
         d2l = self._d2l_vect.transform(docs, labels)
         self.index2label_ = self._d2l_vect.index2label_
         print 'label of index 0', self.index2label_[0]
