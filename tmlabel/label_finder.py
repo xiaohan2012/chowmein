@@ -27,7 +27,7 @@ class BigramLabelFinder(object):
 
         Return:
         ---------------
-        list of str: the bigrams
+        list of tuple of str: the bigrams
         """
         
         finder = BigramCollocationFinder.from_documents(docs)
@@ -37,6 +37,6 @@ class BigramLabelFinder(object):
                                top_n)
         labels = []
         for b in bigrams:
-            labels.append(' '.join(b))
+            labels.append(b)
 
         return labels
