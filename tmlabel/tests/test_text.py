@@ -3,20 +3,20 @@ from numpy.testing import assert_array_equal
 from nose.tools import assert_equal
 from tmlabel.text import LabelCountVectorizer
 
-ir = 'information retrieval'
-ml = 'machine learning'
-nlp = 'natural language processing'
-tm = 'text mining'
+ir = 'information retrieval'.split()
+ml = 'machine learning'.split()
+nlp = 'natural language processing'.split()
+tm = 'text mining'.split()
 
-other = ' --- '
+other = ['---']
 
-docs = [' '.join([ml, other, ml, nlp]),
-        ','.join([ir, tm, other, tm]),
-        ' '.join([ml, other, tm, other]),
-        ','.join([nlp, nlp, nlp, ir, other]),
-        '',
-        ' '.join([other, other, other]),
-        ''.join([ml, ml, ml])]
+docs = [ml + other + ml + nlp,
+        ir + tm + other + tm,
+        ml + other + tm + other,
+        nlp + nlp + nlp + ir + other,
+        [''],
+        other + other + other,
+        ml + ml + ml]
 
 labels = [ml, nlp, tm, ir]
 
@@ -34,3 +34,13 @@ def test_label_count_vectorizer():
                                    [0, 3, 0, 0]], dtype=np.int64))
 
     assert_equal(vect.index2label_, {0: ir, 1: ml, 2: nlp, 3: tm})
+
+
+def test_label_frequency():
+    vect = LabelCountVectorizer()
+    assert_equal(vect._label_frequency(['a'], ['a', 'a', 'a']), 3)
+    assert_equal(vect._label_frequency(['a', 'a'], ['a', 'a', 'a']), 2)
+    assert_equal(vect._label_frequency(['a'], []), 0)
+    assert_equal(vect._label_frequency(['a'], ['b', 'b', 'b']), 0)
+    assert_equal(vect._label_frequency(['a', 'b', 'a'],
+                                       ['a', 'b', 'a', 'b', 'a']), 2)

@@ -26,3 +26,8 @@ def load_nips(years=None, raw=False):
     return docs
 
 
+def load_lemur_stopwords():
+    with codecs.open('datasets/lemur-stopwords.txt', 
+                     'r' 'utf8') as f:
+        return map(lambda s: s.strip(),
+                   f.readlines())
