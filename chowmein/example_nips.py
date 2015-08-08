@@ -8,6 +8,7 @@ from text import LabelCountVectorizer
 from label_finder import BigramLabelFinder
 from label_ranker import LabelRanker
 from pmi import PMICalculator
+from corpus_processor import CorpusWordLengthFilter
 from data import (load_nips, load_lemur_stopwords)
 
 n_topics = 6
@@ -16,6 +17,11 @@ n_top_words = 15
 
 print("Loading docs...")
 docs = load_nips()
+
+print("Word length filtering...")
+wl_filter = CorpusWordLengthFilter(minlen=3)
+docs = wl_filter.transform(docs)
+
 
 print("Generate candidate bigram labels...")
 finder = BigramLabelFinder('pmi')
@@ -55,7 +61,6 @@ ranker = LabelRanker(apply_intra_topic_coverage=False)
 
 for i, labels in enumerate(ranker.top_k_labels(
         topic_models=model.topic_word_,
-
         pmi_w2l=pmi_w2l,
         index2label=pmi_cal.index2label_,
         label_models=None)):
@@ -63,5 +68,5 @@ for i, labels in enumerate(ranker.top_k_labels(
     print "Topic {}: {}".format(
         i,
         ', '.join(map(lambda l: ' '.join(l),
- labels))
+                      labels))
     )
