@@ -1,8 +1,9 @@
+import nltk
 from toolz.functoolz import partial
 from nltk.stem.porter import PorterStemmer
 
 
-class CorpusProcessorBase(object):
+class CorpusBaseProcessor(object):
     """
     Class that processes a corpus
     """
@@ -21,7 +22,7 @@ class CorpusProcessorBase(object):
         raise NotImplemented
 
 
-class CorpusWordLengthFilter(CorpusProcessorBase):
+class CorpusWordLengthFilter(CorpusBaseProcessor):
     def __init__(self, minlen=2, maxlen=35):
         self._min = minlen
         self._max = maxlen
@@ -44,14 +45,14 @@ class CorpusWordLengthFilter(CorpusProcessorBase):
 porter_stemmer = PorterStemmer()
 
 
-class CorpusStemmer(CorpusProcessorBase):
-    def __init__(self, stemmer=porter_stemmer):
+class CorpusStemmer(CorpusBaseProcessor):
+    def __init__(self, stem_func=porter_stemmer.stem):
         """
         Parameter:
         --------------
-        stemmer: stemmer that accepts list of tokens and stem them
+        stem_func: function that accepts one token and stem it
         """
-        self._stem = stemmer
+        self._stem_func = stem_func
 
     def transform(self, docs):
         """
@@ -65,5 +66,30 @@ class CorpusStemmer(CorpusProcessorBase):
         list of list of str: the stemmed corpus
         """
         assert isinstance(docs[0], list)
-        stem_tokens = partial(map, self._stem.stem)
+        stem_tokens = partial(map, self._stem_func)
         return map(stem_tokens, docs)
+
+
+class CorpusPOSTagger(CorpusBaseProcessor):
+    def __init__(self, pos_tag_func=nltk.pos_tag):
+        """
+        Parameter:
+        --------------
+        pos_tag_func: pos_tag function that accepts list of tokens
+            and POS tag them
+        """
+        self._pos_tag_func = pos_tag_func
+
+    def transform(self, docs):
+        """
+        Parameter:
+        -------------
+        docs: list of list of str
+            the documents
+
+        Return:
+        -------------
+        list of list of str: the tagged corpus
+        """
+        assert isinstance(docs[0], list)
+        return map(self._pos_tag_func, docs)

@@ -1,6 +1,7 @@
 from nose.tools import assert_equal
 from chowmein.corpus_processor import (CorpusWordLengthFilter,
-                                       CorpusStemmer)
+                                       CorpusStemmer,
+                                       CorpusPOSTagger)
 
 
 def test_CorpusWordLengthFilter():
@@ -27,3 +28,12 @@ def test_CorpusStemmer():
     assert_equal(actual, expected)
 
 
+def test_CorpusPOSTagger():
+    corpus = ["And now for something completely different".split()]
+    
+    tagger = CorpusPOSTagger()
+    actual = tagger.transform(corpus)
+    expected = [[('And', 'CC'), ('now', 'RB'), ('for', 'IN'),
+                 ('something', 'NN'), ('completely', 'RB'),
+                 ('different', 'JJ')]]
+    assert_equal(actual, expected)
