@@ -3,7 +3,7 @@ from nose.tools import assert_equal
 from numpy.testing import (assert_array_almost_equal,
                            assert_array_equal,
                            assert_almost_equal)
-from tmlabel.label_ranker import LabelRanker
+from chowmein.label_ranker import LabelRanker
 
 
 ranker = LabelRanker()

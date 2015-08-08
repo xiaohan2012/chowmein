@@ -1,5 +1,5 @@
 from nose.tools import (assert_equal, assert_true)
-from tmlabel import data
+from chowmein import data
 
 
 def test_load_nips_tokenized():

@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.testing import assert_array_equal
 from nose.tools import assert_equal
-from tmlabel.text import LabelCountVectorizer
+from chowmein.text import LabelCountVectorizer
 
 ir = 'information retrieval'.split()
 ml = 'machine learning'.split()

@@ -1,5 +1,5 @@
-from tmlabel.label_finder import BigramLabelFinder
-from tmlabel.data import load_nips
+from chowmein.label_finder import BigramLabelFinder
+from chowmein.data import load_nips
 from nose.tools import assert_equal
 
 
