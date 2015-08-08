@@ -22,10 +22,18 @@ def test_label_finder_with_pos():
     docs = load_nips(years=[2009])
     docs = tagger.transform(docs)
 
-    labels = finder.find(docs, 10, top_n=5)
+    labels = finder.find(docs, 10, top_n=5, strip_tags=False)
     
     assert_equal(labels, [((u'monte', 'NN'), (u'carlo', 'NN')),
                           ((u'nonparametric', 'JJ'), (u'bayesian', 'NN')),
                           ((u'active', 'JJ'), (u'learning', 'NN')),
                           ((u'machine', 'NN'), (u'learning', 'NN')),
                           ((u'semi-supervised', 'JJ'), (u'learning', 'NN'))])
+
+    labels = finder.find(docs, 10, top_n=5)
+    
+    assert_equal(labels, [(u'monte', u'carlo'),
+                          (u'nonparametric', u'bayesian'),
+                          (u'active', u'learning'),
+                          (u'machine', u'learning'),
+                          (u'semi-supervised', u'learning')])

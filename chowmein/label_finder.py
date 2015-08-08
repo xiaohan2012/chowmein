@@ -16,7 +16,7 @@ class BigramLabelFinder(object):
 
         self._pos = pos
     
-    def find(self, docs, min_freq, top_n):
+    def find(self, docs, min_freq, top_n, strip_tags=True):
         """
         Parameter:
         ---------------
@@ -28,6 +28,9 @@ class BigramLabelFinder(object):
 
         top_n: int
             how many labels to return
+
+        strip_tags: bool
+            whether return without the POS tags or not
 
         Return:
         ---------------
@@ -59,6 +62,11 @@ class BigramLabelFinder(object):
                     cnt += 1
                 if cnt == top_n:  # enough
                     break
+
+            if strip_tags:
+                valid_bigrams = [tuple(map(partial(get, 0), bigram))
+                                 for bigram in valid_bigrams]
+
             return valid_bigrams
         else:
             bigrams = finder.nbest(score_func,
