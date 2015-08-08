@@ -6,7 +6,7 @@ from nose.tools import assert_equal
 
 def test_label_finder():
     finder = BigramLabelFinder(measure='pmi', pos=None)
-    labels = finder.find(load_nips(years=[2009]), 10, top_n=5)
+    labels = finder.find(load_nips(years=[2009]), top_n=5)
     assert_equal(labels, [(u'monte', u'carlo'),
                           (u'high', u'dimensional'),
                           (u'does', u'not'),  # not so good
@@ -22,7 +22,7 @@ def test_label_finder_with_pos():
     docs = load_nips(years=[2009])
     docs = tagger.transform(docs)
 
-    labels = finder.find(docs, 10, top_n=5, strip_tags=False)
+    labels = finder.find(docs, top_n=5, strip_tags=False)
     
     assert_equal(labels, [((u'monte', 'NN'), (u'carlo', 'NN')),
                           ((u'nonparametric', 'JJ'), (u'bayesian', 'NN')),
@@ -30,7 +30,7 @@ def test_label_finder_with_pos():
                           ((u'machine', 'NN'), (u'learning', 'NN')),
                           ((u'semi-supervised', 'JJ'), (u'learning', 'NN'))])
 
-    labels = finder.find(docs, 10, top_n=5)
+    labels = finder.find(docs, top_n=5)
     
     assert_equal(labels, [(u'monte', u'carlo'),
                           (u'nonparametric', u'bayesian'),

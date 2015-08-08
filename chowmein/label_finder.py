@@ -5,27 +5,33 @@ from toolz.functoolz import partial
 
 
 class BigramLabelFinder(object):
-    def __init__(self, measure='pmi', pos=None):
+    def __init__(self, measure='pmi',
+                 min_freq=10,
+                 pos=[('NN', 'NN'), ('JJ', 'NN')]):
         """
         measure: str
             the measurement method, 'pmi'or 'chi_sq'
+
+        min_freq: int
+            minimal frequency for the label to be considered
+
+        pos: list of (str, str)
+            the POS tag contraint
         """
         self.bigram_measures = nltk.collocations.BigramAssocMeasures()
         assert measure in ('pmi', 'chi_sq')
         self._measure_method = measure
 
+        self._min_freq = min_freq
         self._pos = pos
-    
-    def find(self, docs, min_freq, top_n, strip_tags=True):
+        
+    def find(self, docs, top_n, strip_tags=True):
         """
         Parameter:
         ---------------
 
         docs: list of tokenized documents
             
-        min_freq: int
-            the minimal frequency to be considered
-
         top_n: int
             how many labels to return
 
@@ -48,7 +54,7 @@ class BigramLabelFinder(object):
                              self._measure_method)
 
         finder = BigramCollocationFinder.from_documents(docs)
-        finder.apply_freq_filter(min_freq)
+        finder.apply_freq_filter(self._min_freq)
 
         if self._pos:
             valid_pos_tags = set([pair for pair in self._pos])
