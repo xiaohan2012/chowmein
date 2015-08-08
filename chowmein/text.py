@@ -71,4 +71,4 @@ class LabelCountVectorizer(object):
                 if cnt > 0:
                     ret[i, j] = cnt
         return ret
-        
+
