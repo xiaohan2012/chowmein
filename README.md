@@ -4,26 +4,6 @@ Automatic labeling of topic models.
 
 The alogirithm is described in [Automatic Labeling of Multinomial Topic Models](http://sifaka.cs.uiuc.edu/czhai/pub/kdd07-label.pdf)
 
-# How it works
-
-The current version goes through the following steps
-
-1. Preprocessing using [nltk](http://www.nltk.org/)'s `word_tokenize`, `stem` and `pos_tag`.
-1. Candidate phrase detection using *pointwise mutual information*: POS tag constraint can be applied. For now, only **bigrams** are considered.
-2. Topic modeling using [LDA](https://pypi.python.org/pypi/lda).
-3. Candidate label ranking using the algorithm [here](http://sifaka.cs.uiuc.edu/czhai/pub/kdd07-label.pdf).
-
-# Usage
-
-
-For example:
-
-    >>> python label_topic.py --line_corpus_path datasets/nips-2014.dat  --preprocess wordlen tag --label_tags NN,NN
-
-For more details:
-
-    >>> python label_topic.py --help
-
 # Example 
 
 We model the abstracts of `NIPS 2014`(NIPS abstracts from 2008 to 2014 is available under `datasets/`).
@@ -52,6 +32,34 @@ Topic 3: pascal voc, major challenge, natural language, paper introduce, object 
 Topic 4: low-rank tensor, low-rank matrix, matrix recovery, coordinate descent, problem finding, direction method, statistical learning, risk minimization
 Topic 5: inference algorithm, introduce novel, exponential family, probabilistic inference, neural population, value function, policy search, other hand
 ```
+
+# Usage
+
+
+## Command line
+
+For example:
+
+    >>> python label_topic.py --line_corpus_path datasets/nips-2014.dat  --preprocess wordlen tag --label_tags NN,NN
+
+For more details:
+
+    >>> python label_topic.py --help
+
+## API
+
+Please refer to `example_nips.py`.
+
+
+# How it works
+
+The current version goes through the following steps
+
+1. Preprocessing using [nltk](http://www.nltk.org/)'s `word_tokenize`, `stem` and `pos_tag`.
+1. Candidate phrase detection using *pointwise mutual information*: POS tag constraint can be applied. For now, only **bigrams** are considered.
+2. Topic modeling using [LDA](https://pypi.python.org/pypi/lda).
+3. Candidate label ranking using the algorithm [here](http://sifaka.cs.uiuc.edu/czhai/pub/kdd07-label.pdf).
+
 
 # TODO
 
