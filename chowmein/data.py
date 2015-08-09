@@ -8,6 +8,19 @@ import cPickle as pickle
 CURDIR = os.path.dirname(os.path.realpath(__file__))
 
 
+def load_line_corpus(path, tokenize=True):
+    docs = []
+    with codecs.open(path, "r", "utf8") as f:
+        for l in f:
+            if tokenize:
+                sents = nltk.sent_tokenize(l.strip().lower())
+                docs.append(list(itertools.chain(*map(
+                    nltk.word_tokenize, sents))))
+            else:
+                docs.append(l.strip())
+    return docs
+
+
 def load_nips(years=None, raw=False):
     # load data
     if not years:
@@ -17,14 +30,9 @@ def load_nips(years=None, raw=False):
 
     docs = []
     for f in files:
-        with codecs.open('{}/datasets/{}'.format(CURDIR, f), 'r', 'utf8') as f:
-            for l in f:
-                if raw:
-                    docs.append(l.strip())
-                else:
-                    sents = nltk.sent_tokenize(l.strip().lower())
-                    docs.append(list(itertools.chain(*map(
-                        nltk.word_tokenize, sents))))
+        docs += load_line_corpus('{}/datasets/{}'.format(CURDIR, f),
+                                 tokenize=(not raw))
+        
     return docs
 
 
