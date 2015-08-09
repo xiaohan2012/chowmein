@@ -31,7 +31,8 @@ if [[ "$DISTRIB" == "conda" ]]; then
     # provided versions
     conda create -n testenv --yes python=$PYTHON_VERSION pip nose \
         numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION \
-		nltk=3.0.2 scikit-learn=0.16.1 toolz=0.7.2
+		nltk=3.0.2 scikit-learn=0.16.1 toolz=0.7.2 \
+		lda=1.0.2
     source activate testenv
 
     if [[ "$INSTALL_MKL" == "true" ]]; then
