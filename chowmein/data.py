@@ -78,7 +78,7 @@ def load_tagged_nips(years=None):
 
 
 def load_lemur_stopwords():
-    with codecs.open('datasets/lemur-stopwords.txt', 
+    with codecs.open(CURDIR + '/datasets/lemur-stopwords.txt', 
                      'r' 'utf8') as f:
         return map(lambda s: s.strip(),
                    f.readlines())

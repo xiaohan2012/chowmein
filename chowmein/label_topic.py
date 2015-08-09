@@ -4,18 +4,18 @@ import numpy as np
 
 from sklearn.feature_extraction.text import (CountVectorizer
                                              as WordCountVectorizer)
-from text import LabelCountVectorizer
+from chowmein.text import LabelCountVectorizer
 
-from label_finder import BigramLabelFinder
-from label_ranker import LabelRanker
-from pmi import PMICalculator
-from corpus_processor import (CorpusWordLengthFilter,
-                              CorpusPOSTagger,
-                              CorpusStemmer)
-from data import (load_line_corpus, load_lemur_stopwords)
+from chowmein.label_finder import BigramLabelFinder
+from chowmein.label_ranker import LabelRanker
+from chowmein.pmi import PMICalculator
+from chowmein.corpus_processor import (CorpusWordLengthFilter,
+                                       CorpusPOSTagger,
+                                       CorpusStemmer)
+from chowmein.data import (load_line_corpus, load_lemur_stopwords)
 
 
-if __name__ == '__main__':
+def create_parser():
     parser = argparse.ArgumentParser(
         description="Command line interface that perform topic modeling " +
         " and topic model labeling")
@@ -57,20 +57,19 @@ To disable it, pass 'None'""")
     parser.add_argument('--n_labels', type=int, default=8,
                         help='Number of labels displayed per topic')
 
-    args = parser.parse_args()
+    return parser
 
-    # Variable assignment
-    corpus_path = args.line_corpus_path
-    n_topics = args.n_topics
-    n_top_words = args.n_top_words
-    preprocessing_steps = args.preprocessing
-    n_cand_labels = args.n_cand_labels
-    label_min_df = args.label_min_df
-    n_labels = args.n_labels
 
-    lda_random_state = args.lda_random_state
-    lda_n_iter = args.lda_n_iter
-
+def get_topic_labels(corpus_path, n_topics,
+                     n_top_words,
+                     preprocessing_steps,
+                     n_cand_labels, label_min_df,
+                     label_tags, n_labels,
+                     lda_random_state,
+                     lda_n_iter):
+    """
+    Refer the arguments to `create_parser`
+    """
     print("Loading docs...")
     docs = load_line_corpus(corpus_path)
 
@@ -90,8 +89,8 @@ To disable it, pass 'None'""")
         tagged_docs = tagger.transform(docs)
 
     tag_constraints = []
-    if args.label_tags != ['None']:
-        for tags in args.label_tags:
+    if label_tags != ['None']:
+        for tags in label_tags:
             tag_constraints.append(tuple(map(lambda t: t.strip(),
                                              tags.split(','))))
 
@@ -135,13 +134,35 @@ To disable it, pass 'None'""")
                        for id_ in top_word_ids]
         print('Topic {}: {}'.format(i, ' '.join(topic_words)))
 
-    print("\nTopical labels:")
-    print("-" * 20)
     ranker = LabelRanker(apply_intra_topic_coverage=False)
 
-    print(ranker.print_top_k_labels(topic_models=model.topic_word_,
-                                    pmi_w2l=pmi_w2l,
-                                    index2label=pmi_cal.index2label_,
-                                    label_models=None,
-                                    k=n_labels))
+    return ranker.top_k_labels(topic_models=model.topic_word_,
+                               pmi_w2l=pmi_w2l,
+                               index2label=pmi_cal.index2label_,
+                               label_models=None,
+                               k=n_labels)
+    
+if __name__ == '__main__':
+
+    parser = create_parser()
+
+    args = parser.parse_args()
+    labels = get_topic_labels(corpus_path=args.line_corpus_path,
+                              n_topics=args.n_topics,
+                              n_top_words=args.n_top_words,
+                              preprocessing_steps=args.preprocessing,
+                              n_cand_labels=args.n_cand_labels,
+                              label_min_df=args.label_min_df,
+                              label_tags=args.label_tags,
+                              n_labels=args.n_labels,
+                              lda_random_state=args.lda_random_state,
+                              lda_n_iter=args.lda_n_iter)
+    
+    print("\nTopical labels:")
+    print("-" * 20)
+    for i, labels in enumerate(labels):
+        print(u"Topic {}: {}\n".format(
+            i,
+            ', '.join(map(lambda l: ' '.join(l), labels))
+        ))
 
