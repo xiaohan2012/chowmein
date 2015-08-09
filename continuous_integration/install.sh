@@ -30,7 +30,8 @@ if [[ "$DISTRIB" == "conda" ]]; then
     # Configure the conda environment and put it in the path using the
     # provided versions
     conda create -n testenv --yes python=$PYTHON_VERSION pip nose \
-        numpy=$NUMPY_VERSION scipy=$SCIPY_VERSION
+        numpy=1.9.2 scipy=0.15.1 \
+		nltk=3.0.2 scikit-learn=0.16.1
     source activate testenv
 
     if [[ "$INSTALL_MKL" == "true" ]]; then
@@ -61,4 +62,4 @@ fi
 python --version
 python -c "import numpy; print('numpy %s' % numpy.__version__)"
 python -c "import scipy; print('scipy %s' % scipy.__version__)"
-python setup.py build_ext --inplace
+# python setup.py build_ext --inplace
