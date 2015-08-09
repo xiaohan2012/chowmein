@@ -24,12 +24,14 @@ docs = wl_filter.transform(docs)
 
 
 print("Generate candidate bigram labels(with POS filtering)...")
+
 finder = BigramLabelFinder('pmi', pos=[('NN', 'NN'),
-                                       ('JJ', 'NN')])
+                                       # ('JJ', 'NN')
+                                   ])
 
 tagged_docs = load_tagged_nips()
 
-cand_labels = finder.find(tagged_docs, top_n=200)
+cand_labels = finder.find(tagged_docs, top_n=1000)
 
 print("Calculate the PMI scores...")
 
@@ -43,8 +45,7 @@ pmi_w2l = pmi_cal.from_texts(docs, cand_labels)
 
 
 print("Topic modeling using LDA...")
-model = lda.LDA(n_topics=n_topics, n_iter=100,
-                # alpha=1.0, eta=1.0,
+model = lda.LDA(n_topics=n_topics, n_iter=500,
                 random_state=1)
 model.fit(pmi_cal.d2w_)
 
@@ -61,14 +62,8 @@ print("Topical labels:")
 print("-" * 20)
 ranker = LabelRanker(apply_intra_topic_coverage=False)
 
-for i, labels in enumerate(ranker.top_k_labels(
-        topic_models=model.topic_word_,
-        pmi_w2l=pmi_w2l,
-        index2label=pmi_cal.index2label_,
-        label_models=None)):
-
-    print "Topic {}: {}".format(
-        i,
-        ', '.join(map(lambda l: ' '.join(l),
-                      labels))
-    )
+print(ranker.print_top_k_labels(topic_models=model.topic_word_,
+                                pmi_w2l=pmi_w2l,
+                                index2label=pmi_cal.index2label_,
+                                label_models=None,
+                                k=8))

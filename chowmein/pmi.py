@@ -1,6 +1,9 @@
 import numpy as np
 from scipy.sparse import issparse
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 
 class PMICalculator(object):
     """
@@ -35,11 +38,7 @@ class PMICalculator(object):
         ------------
         numpy.ndarray: #word x #label
             the pmi matrix
-        """
-        # smoothing
-        # d2w += pseudo_count
-        # d2l += pseudo_count
-        
+        """        
         denom1 = d2w.T.sum(axis=1)
         denom2 = d2l.sum(axis=0)
 
@@ -67,11 +66,6 @@ class PMICalculator(object):
 
         # smoothing
         numer += pseudo_count
-        # denom1 += pseudo_count
-        # denom2 += pseudo_count
-
-        print denom1
-        print denom2
 
         return np.log(d2w.shape[0] * numer / denom1 / denom2)
 
@@ -108,8 +102,10 @@ class PMICalculator(object):
 
         self.index2label_ = {i: l
                              for i, l in enumerate(labels)}
-        
-        print 'label of index 0', self.index2label_[0]
+
+        if len(self.index2label_) == 0:
+            logging.warn("After label filtering, there is nothing left.")
+
         self.index2word_ = {i: w
                             for w, i in self._d2w_vect.vocabulary_.items()}
         return self.from_matrices(d2w, d2l)

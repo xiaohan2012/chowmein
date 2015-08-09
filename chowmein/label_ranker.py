@@ -138,10 +138,6 @@ class LabelRanker(object):
         numpy.ndarray, shape (#topics, #labels)
             score for each topic and label pair
         """
-        print "pmi_w2l:"
-        print "-" * 20
-        print pmi_w2l
-
         rel_scores = self.label_relevance_score(topic_models, pmi_w2l)
         
         if use_discrimination:
@@ -216,12 +212,22 @@ class LabelRanker(object):
                                                            label_models)
         else:
             chosen_labels = np.argsort(label_scores, axis=1)[:, :-k-1:-1]
-        print "label_scores:"
-        print "-" * 20
-        print label_scores
         return [[index2label[j]
                  for j in topic_i_labels]
                 for topic_i_labels in chosen_labels]
             
-
-
+    def print_top_k_labels(self, topic_models, pmi_w2l,
+                           index2label, label_models, k):
+        res = u"Topic labels:\n"
+        for i, labels in enumerate(self.top_k_labels(
+                topic_models=topic_models,
+                pmi_w2l=pmi_w2l,
+                index2label=index2label,
+                label_models=label_models,
+                k=k)):
+            res += u"Topic {}: {}\n".format(
+                i,
+                ', '.join(map(lambda l: ' '.join(l),
+                              labels))
+            )
+        return res
