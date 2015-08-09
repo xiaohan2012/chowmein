@@ -5,7 +5,6 @@ import numpy as np
 from sklearn.feature_extraction.text import (CountVectorizer
                                              as WordCountVectorizer)
 from chowmein.text import LabelCountVectorizer
-
 from chowmein.label_finder import BigramLabelFinder
 from chowmein.label_ranker import LabelRanker
 from chowmein.pmi import PMICalculator

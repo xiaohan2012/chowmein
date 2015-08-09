@@ -33,48 +33,7 @@ def load_nips(years=None, raw=False):
         docs += load_line_corpus('{}/datasets/{}'.format(CURDIR, f),
                                  tokenize=(not raw))
         
-    return docs
-
-
-def tag_nips_and_pickle(years=None):
-    """
-    pos tag the nips collection of given years and then pickle them
-    """
-    # load data
-    if not years:
-        years = xrange(2008, 2015)
-    files = ['nips-{}.dat'.format(year)
-             for year in years]
-
-    for year, f in zip(years, files):
-
-        print("processing year {}...".format(year))
-
-        with codecs.open('{}/datasets/{}'.format(CURDIR, f), 'r', 'utf8') as f:
-            docs = []
-            for l in f:
-                sents = nltk.sent_tokenize(l.strip().lower())
-                docs.append(list(itertools.chain(
-                    *map(
-                        compose(nltk.pos_tag, nltk.word_tokenize),
-                        sents))))
-
-            pickle.dump(docs,
-                        open('{}/datasets/nips-pos-{}.pkl'.format(CURDIR,
-                                                                  year),
-                             'w'))
-                
-
-def load_tagged_nips(years=None):
-    if not years:
-        years = xrange(2008, 2015)
-        files = ['nips-pos-{}.pkl'.format(year)
-                 for year in years]
-    docs = []
-    for f in files:
-        full_path = '{}/datasets/{}'.format(CURDIR, f)
-        docs += pickle.load(open(full_path))
-    return docs
+    return docs                
 
 
 def load_lemur_stopwords():
@@ -82,7 +41,3 @@ def load_lemur_stopwords():
                      'r' 'utf8') as f:
         return map(lambda s: s.strip(),
                    f.readlines())
-
-
-if __name__ == "__main__":
-    tag_nips_and_pickle()
