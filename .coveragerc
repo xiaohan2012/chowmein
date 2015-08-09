@@ -5,3 +5,4 @@ include = */chowmein/*
 omit =
     */python?.?/*
     */site-packages/nose/*
+	*/examples_nips.py
