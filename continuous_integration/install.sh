@@ -57,6 +57,7 @@ if [[ "$COVERAGE" == "true" ]]; then
     pip install coverage coveralls
 fi
 
+python -c "import nltk; nltk.download('maxent_treebank_pos_tagger'); nltk.download('punkt')"
 # Build scikit-learn in the install.sh script to collapse the verbose
 # build output in the travis output when it succeeds.
 python --version
