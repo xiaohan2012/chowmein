@@ -9,7 +9,7 @@ from label_finder import BigramLabelFinder
 from label_ranker import LabelRanker
 from pmi import PMICalculator
 from corpus_processor import CorpusWordLengthFilter
-from data import (load_nips, load_lemur_stopwords)
+from data import (load_nips, load_tagged_nips, load_lemur_stopwords)
 
 n_topics = 6
 n_top_words = 15
@@ -23,11 +23,13 @@ wl_filter = CorpusWordLengthFilter(minlen=3)
 docs = wl_filter.transform(docs)
 
 
-print("Generate candidate bigram labels...")
-finder = BigramLabelFinder('pmi')
+print("Generate candidate bigram labels(with POS filtering)...")
+finder = BigramLabelFinder('pmi', pos=[('NN', 'NN'),
+                                       ('JJ', 'NN')])
 
-cand_labels = finder.find(docs, 10, top_n=200)
+tagged_docs = load_tagged_nips()
 
+cand_labels = finder.find(tagged_docs, top_n=200)
 
 print("Calculate the PMI scores...")
 

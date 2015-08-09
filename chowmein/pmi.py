@@ -17,7 +17,7 @@ class PMICalculator(object):
         self.index2word_ = None
         self.index2label_ = None
         
-    def from_matrices(self, d2w, d2l, pseudo_count=1e-5):
+    def from_matrices(self, d2w, d2l, pseudo_count=1):
         """
         Parameter:
         ------------
@@ -43,9 +43,6 @@ class PMICalculator(object):
         denom1 = d2w.T.sum(axis=1)
         denom2 = d2l.sum(axis=0)
 
-        print denom1
-        print denom2
-
         # both are dense
         if (not issparse(d2w)) and (not issparse(d2l)):
             numer = np.matrix(d2w.T > 0) * np.matrix(d2l > 0)
@@ -61,11 +58,20 @@ class PMICalculator(object):
 
         # dtype conversion
         numer = np.asarray(numer, dtype=np.float64)
-        denom1 = denom1.repeat(repeats=d2l.shape[1], axis=1)
-        denom2 = denom2.repeat(repeats=d2w.shape[1], axis=0)
+        denom1 = np.asarray(
+            denom1.repeat(repeats=d2l.shape[1], axis=1),
+            dtype=np.float64)
+        denom2 = np.asarray(
+            denom2.repeat(repeats=d2w.shape[1], axis=0),
+            dtype=np.float64)
 
         # smoothing
         numer += pseudo_count
+        # denom1 += pseudo_count
+        # denom2 += pseudo_count
+
+        print denom1
+        print denom2
 
         return np.log(d2w.shape[0] * numer / denom1 / denom2)
 
@@ -90,7 +96,19 @@ class PMICalculator(object):
         self.d2w_ = d2w
 
         d2l = self._d2l_vect.transform(docs, labels)
-        self.index2label_ = self._d2l_vect.index2label_
+
+        # remove the labels without any occurrences
+        indices = np.asarray(d2l.sum(axis=0).nonzero()[1]).flatten()
+        d2l = d2l[:, indices]
+
+        indices = set(indices)
+        labels = [l
+                  for i, l in self._d2l_vect.index2label_.items()
+                  if i in indices]
+
+        self.index2label_ = {i: l
+                             for i, l in enumerate(labels)}
+        
         print 'label of index 0', self.index2label_[0]
         self.index2word_ = {i: w
                             for w, i in self._d2w_vect.vocabulary_.items()}

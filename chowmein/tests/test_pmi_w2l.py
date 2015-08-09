@@ -71,3 +71,15 @@ def test_from_texts():
                                     1: 'machine learning'.split(),
                                     2: 'natural language processing'.split(),
                                     3: 'text mining'.split()})
+
+
+def test_from_texts_nonexisting_label():
+    cal = PMICalculator(doc2word_vectorizer=CountVectorizer(min_df=0),
+                        doc2label_vectorizer=LabelCountVectorizer())
+    actual = cal.from_texts(docs, labels[:2] + [('haha', 'lala')] +
+                            labels[2:] + [('non', 'existing')])
+    assert_equal(actual.shape[1], 4)
+    assert_equal(cal.index2label_, {0: 'information retrieval'.split(),
+                                    1: 'machine learning'.split(),
+                                    2: 'natural language processing'.split(),
+                                    3: 'text mining'.split()})
