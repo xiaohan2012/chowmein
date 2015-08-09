@@ -104,12 +104,13 @@ To disable it, pass 'None'""")
     finder = BigramLabelFinder('pmi', min_freq=label_min_df,
                                pos=tag_constraints)
     if tag_constraints:
+        assert 'tag' in preprocessing_steps, \
+            'If tag constraint is applied, pos tagging(tag) should be performed'
         cand_labels = finder.find(tagged_docs, top_n=n_cand_labels)
     else:  # if no constraint, then use untagged docs
         cand_labels = finder.find(docs, top_n=n_cand_labels)
 
     print("Collected {} candidate labels".format(len(cand_labels)))
-    print cand_labels
 
     print("Calculate the PMI scores...")
 
