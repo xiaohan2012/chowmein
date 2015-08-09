@@ -1,4 +1,4 @@
-from scipy.sparse import csr_matrix
+from scipy.sparse import (csr_matrix, lil_matrix)
 from scipy import int64
 
 
@@ -63,12 +63,12 @@ class LabelCountVectorizer(object):
         self.index2label_ = {index: label
                              for index, label in enumerate(labels)}
 
-        ret = csr_matrix((len(docs), len(labels)),
+        ret = lil_matrix((len(docs), len(labels)),
                          dtype=int64)
         for i, d in enumerate(docs):
             for j, l in enumerate(labels):
                 cnt = self._label_frequency(l, d)
                 if cnt > 0:
                     ret[i, j] = cnt
-        return ret
+        return ret.tocsr()
 
