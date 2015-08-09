@@ -53,9 +53,9 @@ elif [[ "$DISTRIB" == "ubuntu" ]]; then
     pip install nose
 fi
 
-if [[ "$COVERAGE" == "true" ]]; then
-    pip install coverage coveralls
-fi
+
+pip install coverage coveralls
+
 
 python -c "import nltk; nltk.download('maxent_treebank_pos_tagger'); nltk.download('punkt')"
 # Build scikit-learn in the install.sh script to collapse the verbose
