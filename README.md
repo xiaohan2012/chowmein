@@ -1,5 +1,5 @@
-![Travi build status](https://travis-ci.org/xiaohan2012/chowmein.svg?branch=master)
-![Coverall status]()
+[![Build Status](https://travis-ci.org/xiaohan2012/chowmein.svg?branch=master)](https://travis-ci.org/xiaohan2012/chowmein)
+[![Coverage Status](https://coveralls.io/repos/xiaohan2012/chowmein/badge.svg?branch=master&service=github)](https://coveralls.io/github/xiaohan2012/chowmein?branch=master)
 
 # chowmein
 
