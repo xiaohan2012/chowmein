@@ -47,7 +47,7 @@ def test_from_matrices_with_smoothing():
     assert_array_almost_equal(cal.from_matrices(d2w, d2l, pseudo_count=1e-5),
                               expected, decimal=5)
 
-from test_text import (docs, labels)
+from chowmein.tests.test_text import (docs, labels)
 from sklearn.feature_extraction.text import CountVectorizer
 from chowmein.text import LabelCountVectorizer
 

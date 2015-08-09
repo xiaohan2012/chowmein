@@ -48,7 +48,7 @@ def tag_nips_and_pickle(years=None):
 
     for year, f in zip(years, files):
 
-        print "processing year {}...".format(year)
+        print("processing year {}...".format(year))
 
         with codecs.open('{}/datasets/{}'.format(CURDIR, f), 'r', 'utf8') as f:
             docs = []
