@@ -49,9 +49,9 @@ For more details:
 
     >>> python label_topic.py --help
 
-## API
+## Programmatically
 
-Please refer to `example_nips.py`.
+Please refer to `label_topic.py`.
 
 
 # How it works
