@@ -1,0 +1,7 @@
+[run]
+branch = True
+source = chowmein
+include = */chowmein/*
+omit =
+    */python?.?/*
+    */site-packages/nose/*
