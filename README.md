@@ -1,3 +1,6 @@
+![Travi build status](https://travis-ci.org/xiaohan2012/chowmein.svg?branch=master)
+![Coverall status]()
+
 # chowmein
 
 Automatic labeling of topic models.
